@@ -4,8 +4,8 @@ using UnityEngine;
 [InitializeOnLoad]
 public static class CustomHierarchyActivity
 {
+    private static float _iconPadding = 3f;
     private static readonly float IconWidth = 15;
-    private static readonly Vector2 IconPadding = new Vector2(3, 0);
     private static readonly GUIContent ActiveIcon = EditorGUIUtility.IconContent("d_scenevis_visible_hover@2x");
     private static readonly GUIContent InActiveIcon = EditorGUIUtility.IconContent("d_scenevis_hidden_hover@2x");
 
@@ -19,21 +19,18 @@ public static class CustomHierarchyActivity
         GUIStyle icon = new GUIStyle();
         GameObject instanceGameObject = EditorUtility.InstanceIDToObject(instanceID) as GameObject;
         if (instanceGameObject == null) return;
+        
+        _iconPadding = PrefabUtility.IsPartOfAnyPrefab(instanceGameObject) ? 15 : 3;
 
         EditorGUIUtility.SetIconSize(new Vector2(IconWidth, IconWidth));
-        var iconDrawRect = new Rect(rect.xMax - IconPadding.x, rect.yMin, rect.width, rect.height);
+        var iconDrawRect = new Rect(rect.xMax - _iconPadding, rect.yMin, rect.width, rect.height);
 
-        var iconGUIContent = new GUIContent(ActiveIcon);
-        switch (instanceGameObject.activeInHierarchy)
+        GUIContent iconGUIContent = instanceGameObject.activeInHierarchy switch
         {
-            case true:
-                iconGUIContent = new GUIContent(ActiveIcon);
-                break;
-            case false:
-                iconGUIContent = new GUIContent(InActiveIcon);
-                break;
-        }
-        
+            true => new GUIContent(ActiveIcon),
+            false => new GUIContent(InActiveIcon)
+        };
+
         GUI.Label(iconDrawRect, iconGUIContent, icon);
 
         bool toggle = EditorGUI.Toggle(iconDrawRect, instanceGameObject.activeInHierarchy, icon);
