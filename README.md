@@ -10,10 +10,6 @@ This is a simple Unity Editor extension that adds buttons to the hierarchy windo
 2. Import the package into your project.
 3. Done!
 
-## Before Use
-
-1. You have to create a new tag and name it as "Folder," otherwise, you will get an error.
-
 ## Usage
 
 1. Select a game object in the hierarchy window.
